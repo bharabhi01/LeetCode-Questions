@@ -11,27 +11,33 @@
  */
 
 class Solution {
-    public:
-    vector<int>traverse(TreeNode* root, int& ans)
-    {
+public:
+    struct S {
+        bool isBST;
+        int minVal, maxVal, sum;
+    };
+    
+    S helper(TreeNode* root, int &res) {
         if(!root)
-            return {INT_MAX, INT_MIN, 0};
+            return {true, INT_MAX, INT_MIN, 0};
         
-        vector<int>left(traverse(root->left, ans)), right(traverse(root->right, ans));
+        S left = helper(root->left, res);
+        S right = helper(root->right, res);
         
-        if(left.empty() || right.empty() || root->val <= left[1] || root->val >= right[0])
-            return {};
-        
-        int curr = left[2] + right[2] + root->val;
-        
-        ans = max(ans, curr);
-        
-        return {min(left[0], root->val), max(right[1], root->val), curr};
+        if(left.isBST && right.isBST && left.maxVal < root->val && right.minVal > root->val)
+        {
+            int sum = left.sum + right.sum + root->val;
+            res = max(res, sum);
+            
+            return {true, min(left.minVal, root->val), max(right.maxVal, root->val), sum};
+        }
+        else
+            return {false, 0, 0, 0};
     }
     
     int maxSumBST(TreeNode* root) {
-        int ans = 0;
-        traverse(root, ans);
-        return max(0, ans);
+        int res = 0;
+        helper(root, res);
+        return res;
     }
 };
