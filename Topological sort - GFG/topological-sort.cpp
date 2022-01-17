@@ -6,43 +6,47 @@ using namespace std;
 class Solution
 {
 	public:
-	void findTopo(int node, vector<int>adj[], stack<int>&st, vector<int>&vis)
-	{
-	   vis[node] = 1;
-	   
-	   for(auto it: adj[node])
-	   {
-	       if(!vis[it])
-	       {
-	           findTopo(it, adj, st, vis);
-	       }
-	   }
-	   
-	   st.push(node);
-	}
-	
 	vector<int> topoSort(int V, vector<int> adj[]) 
 	{
-	    stack<int>st;
-	    vector<int>vis(V, 0);
+	    queue<int>q;
+	    vector<int>inDegree(V, 0);
 	    
 	    for(int i = 0; i < V; i++)
 	    {
-	        if(!vis[i])
+	        for(auto it: adj[i])
 	        {
-	            findTopo(i, adj, st, vis);
+	            inDegree[it]++;
 	        }
 	    }
 	    
-	    vector<int>ans;
-	    
-	    while(!st.empty())
+	    for(int i = 0; i < V; i++)
 	    {
-	        ans.push_back(st.top());
-	        st.pop();
+	        if(inDegree[i] == 0)
+	        {
+	            q.push(i);
+	        }
 	    }
 	    
-	    return ans;
+	    vector<int>topo;
+	    
+	    while(!q.empty())
+	    {
+	        int node = q.front();
+	        q.pop();
+	        
+	        topo.push_back(node);
+	        
+	        for(auto it: adj[node])
+	        {
+	            inDegree[it]--;
+	            if(inDegree[it] == 0)
+	            {
+	                q.push(it);
+	            }
+	        }
+	    }
+	    
+	    return topo;
 	}
 };
 
