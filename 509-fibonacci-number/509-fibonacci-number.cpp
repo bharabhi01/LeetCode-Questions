@@ -1,19 +1,17 @@
 class Solution {
-public:
-    int fiba(int n, vector<int>&dp)
-    {
+public:  
+    int fib(int n) {
         if(n <= 1)
             return n;
+        int prev2 = 0, prev = 1;
         
-        if(dp[n] != -1)
-            return dp[n];
+        for(int i = 2; i <= n; i++)
+        {
+            int curr = prev + prev2;
+            prev2 = prev;
+            prev = curr;
+        }
         
-        return dp[n] = fiba(n-1, dp) + fiba(n-2, dp);
-    }
-    
-    int fib(int n) {
-        vector<int>dp(n + 1, -1);
-        
-        return fiba(n, dp);
+        return prev;
     }
 };
