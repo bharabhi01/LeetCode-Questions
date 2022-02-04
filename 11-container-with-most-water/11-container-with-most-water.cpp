@@ -5,7 +5,7 @@ public:
         int left = 0;
         int right = n - 1;
         
-        int maxArea = 0;
+        int maxArea = INT_MIN;
         
         while(left < right)
         {
