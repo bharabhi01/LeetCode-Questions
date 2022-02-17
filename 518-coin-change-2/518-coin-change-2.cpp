@@ -2,25 +2,27 @@ class Solution {
 public:    
     int change(int amount, vector<int>& coins) {
         int n = coins.size();
-        vector<vector<int>>dp(n, vector<int>(amount + 1, 0));
+        vector<int>prev(amount + 1, 0), curr(amount + 1, 0);
         
         for(int T = 0; T <= amount; T++)
-            dp[0][T] = T % coins[0] == 0;
+            prev[T] = T % coins[0] == 0;
         
         for(int ind = 1; ind < n; ind++)
         {
             for(int T = 0; T <= amount; T++)
             {
-                int notTake = dp[ind - 1][T];
+                int notTake = prev[T];
         
                 int take = 0;
                 if(coins[ind] <= T)
-                    take = dp[ind][T - coins[ind]];
+                    take = curr[T - coins[ind]];
 
-                dp[ind][T] = take + notTake;
+                curr[T] = take + notTake;
             }
+            
+            prev = curr;
         }
         
-        return dp[n - 1][amount];
+        return prev[amount];
     }
 };
