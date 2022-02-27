@@ -36,10 +36,10 @@ public:
                     last = curr_id;
                 
                 if(node->left)
-                    q.push({node->left, 2 * curr_id + 1});
+                    q.push({node->left, (long long)2 * curr_id + 1});
                 
                 if(node->right)
-                    q.push({node->right, 2 * curr_id + 2});
+                    q.push({node->right, (long long)2 * curr_id + 2});
                 
             }
             
