@@ -10,7 +10,7 @@ public:
                 count++;
             else if(s[i] == ')')
             { 
-                if(count==0)  
+                if(count == 0)  
                     s[i] = '#';
                 else
                     count--;
