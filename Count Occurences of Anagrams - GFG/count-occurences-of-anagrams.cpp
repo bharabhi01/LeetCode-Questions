@@ -36,7 +36,6 @@ public:
 	    
 	    return count;
 	}
-    
 };
 
 // { Driver Code Starts.
