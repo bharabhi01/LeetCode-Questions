@@ -1,69 +1,74 @@
+int tar;
+
 class Solution {
-    int a,b,c,d;
-    bool fun(vector<int>& matchsticks,int i) {
-        if(i == matchsticks.size())
+public:
+    void tryForm(int idx, vector<int>& mat, int sum, vector<int>& row, int mask, int pre) {
+        if (sum == tar) 
         {
-            if(a == 0 && b == 0 && c == 0 && d == 0) 
-                return true;
-            else 
-                return false;
+            row.push_back(mask);
+            return;
         }
         
-        if(matchsticks[i] <= a)
+        if (sum > tar or idx == -1) 
+            return;
+        
+        if ((mask & (1 << idx)) > 0 or mat[idx] == pre) 
+            tryForm(idx - 1, mat, sum, row, mask, pre);
+        else 
         {
-            a -= matchsticks[i];
-            
-            if(fun(matchsticks, i + 1)) 
-                return true;
-            a += matchsticks[i];      
+            int nextMask = (mask | (1 << idx));
+            tryForm(idx - 1, mat, sum + mat[idx], row, nextMask, pre);
+            tryForm(idx - 1, mat, sum, row, mask, mat[idx]);
+        }
+    }
+    
+    bool dfs(int pos, int mask, vector<int>& mat) {
+        if (pos == 3) 
+            return true;
+        
+        vector<int> v;
+        int sum = 0, idx = 0, nextMask = mask;
+        
+        for (int i = mat.size() - 1; i >= 0; i--) 
+        {
+            if ((mask & (1 << i)) == 0) 
+            {
+                sum += mat[i];
+                idx = i - 1;
+                nextMask |= (1 << i);
+                break;
+            }
         }
         
-        if(matchsticks[i] <= b)
-        {
-            b -= matchsticks[i];
-            
-            if(fun(matchsticks, i + 1)) 
+        tryForm(idx, mat, sum, v, nextMask, -1);
+        int res = false;
+
+        for (int i = 0; i < v.size(); i++) {
+            res = (res or dfs(pos + 1, v[i], mat));
+            if (res) 
                 return true;
-            b += matchsticks[i];                            
         }
-        
-        if(matchsticks[i] <= c)
-        {
-            c -= matchsticks[i];
-            
-            if(fun(matchsticks, i + 1)) 
-                return true;
-            c += matchsticks[i];        
-        }
-        
-        if(matchsticks[i] <= d)
-        {
-            d -= matchsticks[i];
-            
-            if(fun(matchsticks, i + 1)) 
-                return true;
-            d += matchsticks[i];       
-        }
-        
+    
         return false;
     }
     
-public:
-    bool makesquare(vector<int>& matchsticks) {
-        int n = matchsticks.size();
+    
+    bool makesquare(vector<int>& mat) {
+        int n =  mat.size();
         
-        if(n < 4) 
+        if (n < 4) 
             return false;
+        
+        sort(mat.begin(), mat.end());
+        int sum = 0;
+        
+        for (auto& m : mat) 
+            sum += m;
+        
+        if (sum % 4 != 0) 
+            return false;
+        tar = sum / 4;
 
-		int sum = accumulate(matchsticks.begin(), matchsticks.end(), 0);
-        if(sum % 4 != 0) 
-            return false;
-        
-		int sizeSum = sum / 4;
-        a = sizeSum, b = sizeSum, c = sizeSum, d = sizeSum;
-  
-		sort(matchsticks.rbegin(), matchsticks.rend());
-        
-		return fun(matchsticks, 0);
+        return dfs(0, 0, mat);
     }
 };
