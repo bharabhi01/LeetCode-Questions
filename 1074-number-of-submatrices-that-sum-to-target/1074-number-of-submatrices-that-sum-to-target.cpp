@@ -1,32 +1,27 @@
 class Solution {
 public:
     int numSubmatrixSumTarget(vector<vector<int>>& matrix, int target) {
-        int n = matrix.size(), m = matrix[0].size(), count = 0;
-        vector<vector<int>> temp(n + 1, vector<int>(m));
+        int m = matrix.size(), n = matrix[0].size(), ret = 0;
         
-        for(int i = 0; i < n; i++)
+        for(int i1 = 0; i1 < m; ++i1) 
         {
-            for(int j = 0; j < m; j++)
-                temp[i + 1][j] = temp[i][j] + matrix[i][j];
-        }
-        
-        for(int i = 0; i < n; i++)
-        {
-            for(int j = i + 1; j <= n; j++)
+            int sums[100] = {0};
+            
+            for(int i2 = i1; i2 < m; ++i2) 
             {
-                for(int k = 0; k < m; k++)
+                for(int j = 0; j < n; ++j)
+                    sums[j] += matrix[i2][j];
+                
+                for(int j = 0; j < n; ++j) 
                 {
                     int sum = 0;
-                    for(int l = k; l < m; l++)
-                    {
-                        sum += temp[j][l] - temp[i][l];
-                        if(sum == target)
-                            count++;
-                    }
+                    for (int k = j; k < n; ++k)
+                        if (target == (sum = sum + sums[k]))
+                            ret++;
                 }
             }
         }
         
-        return count;
+        return ret;
     }
 };
