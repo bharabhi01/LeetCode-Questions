@@ -1,32 +1,30 @@
 class Solution {
 public:
-    bool isSubsequence(string s1, string s2, int m, int n) {
-        int j = 0;
-        
-        for(int i = 0; i < m && j < n; i++)
-        {
-            if(s1[i] == s2[j]) 
-                j++;
-        }
-        
-        return j == n;
-    }
-    
     int numMatchingSubseq(string s, vector<string>& words) {
         int count = 0;
-
-        map<string, bool> mp;
-        for(auto x: words)
+        size_t pos;
+        
+        if (s.empty())
+            return 0;
+        
+        for (const string& w : words)
         {
-            if(mp.find(x) != mp.end()) 
-            {
-                if(mp[x] == true) 
-                    count++;
-                
+            if (w.empty())
                 continue;
+            
+            pos = 0;
+            for (char c : w)
+            {
+                pos = s.find(c, pos);
+                
+                if (pos == string::npos)
+                    break;
+                
+                pos++;
             }
-            mp[x] = isSubsequence(s, x, s.size(), x.size());
-            count += (mp[x] == true);
+            
+            if (pos != string::npos)
+                count++;
         }
         
         return count;
