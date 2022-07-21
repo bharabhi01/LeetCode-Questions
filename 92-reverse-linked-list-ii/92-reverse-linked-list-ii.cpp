@@ -15,12 +15,12 @@ class Solution
             ListNode *dummy = new ListNode(0), *pre = dummy, *cur;
             dummy->next = head;
             
-            for (int i = 0; i < left - 1; i++)
+            for(int i = 0; i < left - 1; i++)
                 pre = pre->next;
                 
             cur = pre->next;
             
-            for (int i = 0; i < right - left; i++)
+            for(int i = 0; i < right - left; i++)
             {
                 ListNode *temp = pre->next;
                 pre->next = cur->next;
