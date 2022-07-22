@@ -10,20 +10,35 @@
  */
 class Solution {
 public:
-     ListNode* partition(ListNode* head, int x) {
-         ListNode *lesser = new ListNode(-1), *greater = new ListNode(-1), *lesser_head = lesser, *greater_head = greater;
-         
-         while(head)
-         {
-             if(head -> val < x) 
-                    lesser -> next = head, lesser = lesser -> next;
-             else 
-                    greater -> next = head, greater = greater -> next;
-             head = head -> next; 
-         }
-         
-         greater -> next = NULL;
-         lesser -> next = greater_head -> next;
-         return lesser_head -> next;
+    ListNode* partition(ListNode* head, int x) {
+        ListNode *l1 = new ListNode(10), *l2 = new ListNode(10), *t1 = l1, *t2 = l2;
+        
+        while(head)
+        {
+            if(head->val < x)
+            {
+                t1->next = head;
+                t1 = t1->next;
+            }
+            else
+            {
+                t2->next = head;
+                t2 = t2->next;
+            }
+            head = head->next;
+        }
+        
+        t1->next = t2->next = nullptr;
+        l1 = l1->next;
+        l2 = l2->next;
+        
+        if(!l1) 
+            return l2;
+        if(!l2) 
+            return l1;
+        
+        t1->next = l2;
+        
+        return l1;
     }
 };
