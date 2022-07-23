@@ -1,54 +1,48 @@
 class Solution {
-public:
-    void merge(vector<int> &count, vector<pair<int, int> > &v, int left, int mid, int right) {
-        vector<pair<int, int>> tmp(right - left + 1);
-        int i = left;
-        int j = mid + 1;
-        int k = 0;
-
-        while (i <= mid && j <= right) 
+public: 
+    int C[20002];
+    int MAX = 20001;
+    int MIN = 10001;
+    
+    int sum(int x)
+    {
+        int ret = 0;
+        
+        while(x > 0)
         {
-            if (v[i].first <= v[j].first) 
-                tmp[k++] = v[j++];
-            else 
-            {
-                count[v[i].second] += right - j + 1;
-                tmp[k++] = v[i++];
-            }
+            ret += C[x];
+            x -= x & (-x);
         }
         
-        while (i <= mid)
-            tmp[k++] = v[i++];
-        
-        while (j <= right) 
-            tmp[k++] = v[j++];
-        
-        for (int i = left; i <= right; i++)
-            v[i] = tmp[i-left];
-    }        
-
-    void mergeSort(vector<int> &count, vector<pair<int, int> > &v, int left, int right) {
-        if (left >= right) 
-            return;
-
-        int mid = left + (right - left) / 2;
-        
-        mergeSort(count, v, left, mid);
-        mergeSort(count, v, mid+1, right);
-        merge(count, v, left, mid, right);
+        return ret;
     }
-
+    
+    void add(int x,int d)
+    {
+        while(x <= MAX)
+        {
+            C[x] += d;
+            x += x & (-x);
+        }
+    }
+    
     vector<int> countSmaller(vector<int>& nums) {
-        int N = nums.size();
-        vector<pair<int, int> > v(N);
+        vector<int> ans;
+        memset(C, 0, sizeof(C));
+        int n = nums.size();
         
-        for (int i = 0; i < N; i++)   
-            v[i] = make_pair(nums[i], i);
+        for(int i = n - 1; i >= 0; i--)
+        {
+            nums[i] += MIN;
+            int small = sum(nums[i] - 1);
+            
+            ans.push_back(small);
+            add(nums[i], 1);
+        }
+        
+        for(int i = 0; i < n / 2; i++)
+            swap(ans[i], ans[n - 1 - i]);
 
-        vector<int> count(N, 0);
-
-        mergeSort(count, v, 0, N-1);
-
-        return count;
+        return ans;
     }
 };
