@@ -1,26 +1,35 @@
 class Solution {
 public:
-    bool isHappy(int n) {
-        unordered_map<int,int> mp;
+    int sumOfSquares(int n)
+    {
+        int sum = 0;
         
-        while(n != 1)
+        while(n)
         {
-            if(mp[n] == 0)
-                mp[n]++;
-            else
-                return false;
-            
-            int sum = 0;
-            
-            while(n != 0)
-            {
-                sum += pow(n % 10, 2);
-                n = n / 10;
-            }
-            
-            n = sum;
+            int digit = n % 10;
+            sum += digit * digit;
+            n /= 10;
         }
         
-        return true;
+        return sum;
     }
+    
+    bool isHappy(int n) {
+        if(n <= 0)
+            return false;
+        
+        unordered_set<int> st;
+        
+        while(st.find(n) == st.end())
+        {
+            st.insert(n);
+            n = sumOfSquares(n);
+            
+            if(n == 1)
+                return true;
+        }
+        
+        return false;
+    }
+    
 };
