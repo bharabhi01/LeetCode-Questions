@@ -1,20 +1,16 @@
 class Solution {
 public:
     int kthFactor(int n, int k) {
-        vector<int>factor;
-        factor.push_back(1);
-        
-        for(int i = 2; i <= n /2; i++)
+        int ans = -1;
+        for(int i = 1; i <= n && k != 0; i++)
         {
             if(n % i == 0)
-                factor.push_back(i);
+            {
+                ans = i;
+                k--;
+            }
         }
         
-        factor.push_back(n);
-        
-        if(k > factor.size())
-            return -1;
-        
-        return factor[k - 1];
+        return k == 0 ? ans : -1;
     }
 };
