@@ -1,16 +1,18 @@
 class Solution {
 public:
     int kthFactor(int n, int k) {
-        int ans = -1;
-        for(int i = 1; i <= n && k != 0; i++)
+        int count = 0;
+        
+        for(int i = 1; i <= n; i++) 
         {
-            if(n % i == 0)
+            if(n % i == 0) 
             {
-                ans = i;
-                k--;
+                count++;
+                if(count == k) 
+                    return i;
             }
         }
         
-        return k == 0 ? ans : -1;
+        return -1;
     }
 };
