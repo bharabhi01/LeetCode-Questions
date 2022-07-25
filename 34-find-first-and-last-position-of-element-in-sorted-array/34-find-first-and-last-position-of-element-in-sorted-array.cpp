@@ -1,30 +1,61 @@
 class Solution {
 public:
-    int binarySearch(vector<int>& nums, int target, string find)
-    {
-        int n = nums.size();
-        int start = 0, last = n - 1, mid, ans = -1;
+    int firstPos(vector<int>& nums, int target) {
+        int start = 0;
+        int end = nums.size() - 1;
+        int ans = -1;
         
-        while(start <= last)
+        while(start <= end) 
         {
-            mid = (start + last) / 2;
+            int mid = start + (end - start) / 2;
             
-            if(nums[mid] == target)
+            if(target == nums[mid]) 
             {
                 ans = mid;
-                (find == "First") ? last = mid - 1 : start = mid + 1;
+                end = mid - 1;
             }
-            else if(nums[mid] > target)
-                last = mid - 1;
-            else 
+            
+            if(target < nums[mid])
+                end = mid - 1;
+            else if(target > nums[mid])
                 start = mid + 1;
         }
         
         return ans;
     }
     
+    int lastPos(vector<int>& nums, int target) {
+        int start = 0;
+        int end = nums.size() - 1;
+        int ans = -1;
+        
+        while(start <= end) 
+        {
+            int mid = start + (end - start) / 2;
+            
+            if(target == nums[mid]) 
+            {
+                ans = mid;
+                start = mid + 1;
+            }
+            
+            if(target < nums[mid]) 
+                end = mid - 1;
+            else if(target > nums[mid])
+                start = mid + 1;
+        }
+        
+        return ans;
+    }
     
     vector<int> searchRange(vector<int>& nums, int target) {
-       return {binarySearch(nums, target, "First"), binarySearch(nums, target, "Last")};
+        int n = nums.size();
+        if(n == 0) 
+            return {-1, -1};
+        
+        int first = firstPos(nums, target);
+        int last = lastPos(nums, target);
+        
+        return {first, last};
     }
 };
