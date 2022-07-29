@@ -2,7 +2,7 @@ class Solution {
 public:
     string getPattern(string pattern) {
         string ans;
-        int j = 0, m = pattern.size();
+        int m = pattern.size(), j = 0;
         
         map<char, char>mp;
         
@@ -21,13 +21,12 @@ public:
     
     vector<string> findAndReplacePattern(vector<string>& words, string pattern) {
         string pat = getPattern(pattern);
-        vector<string>ans;
         int n = words.size();
+        vector<string>ans;
         
         for(int i = 0; i < n; i++)
         {
             string p = getPattern(words[i]);
-            
             if(p == pat)
                 ans.push_back(words[i]);
         }
