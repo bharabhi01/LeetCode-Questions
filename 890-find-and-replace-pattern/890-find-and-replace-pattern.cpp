@@ -1,34 +1,40 @@
 class Solution {
 public:
-    string getPattern(string pattern) {
-        string ans;
-        int m = pattern.size(), j = 0;
-        
-        map<char, char>mp;
-        
-        for(int i = 0; i < m; i++)
-        {
-            if(mp.find(pattern[i]) == mp.end())
-            {
-                mp[pattern[i]] = 'a' + j;
-                j++;
-            }
-            ans.push_back(mp[pattern[i]]);
-        }
-        
-        return ans;
-    }
-    
     vector<string> findAndReplacePattern(vector<string>& words, string pattern) {
-        string pat = getPattern(pattern);
-        int n = words.size();
-        vector<string>ans;
+        vector<string> ans;
         
-        for(int i = 0; i < n; i++)
+        for(auto x : words)
         {
-            string p = getPattern(words[i]);
-            if(p == pat)
-                ans.push_back(words[i]);
+            if(x.length() == pattern.length())
+            {
+                ans.push_back(x);
+                unordered_map<char,char> mx;
+                unordered_map<char,char> mp;
+                
+                for(int i = 0; i < x.length(); i++)
+                {
+                    if(mx.find(x[i]) == mx.end() && mp.find(pattern[i]) != mp.end())
+                    {
+                        ans.pop_back();
+                        i = x.length();
+                    }
+                    else if(mx.find(x[i]) != mx.end() && mp.find(pattern[i]) == mp.end())
+                    {
+                        ans.pop_back();
+                        i = x.length();
+                    }
+                    else if(mx.find(x[i]) == mx.end() && mp.find(pattern[i]) == mp.end())
+                    {
+                        mx[x[i]] = pattern[i];
+                        mp[pattern[i]] = x[i];
+                    }
+                    else if(mx[x[i]] != pattern[i] || mp[pattern[i]] != x[i])
+                    {
+                        ans.pop_back();
+                        i = x.length();
+                    }
+                }
+            }
         }
         
         return ans;
