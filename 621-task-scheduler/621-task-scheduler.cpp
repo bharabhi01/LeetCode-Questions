@@ -2,7 +2,7 @@ class Solution {
 public:
 	int leastInterval(vector<char>& tasks, int n) {
 		int len = tasks.size();
-		vector<int>freq(26, 0);
+		vector<int>freq(26);
         
 		for(int i = 0; i < len; i++)
 			freq[tasks[i] - 'A']++;
