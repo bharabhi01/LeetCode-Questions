@@ -1,34 +1,39 @@
 class Solution {
 public:
-    static const bool comp(vector<int> &a, vector<int> &b) {
-        if(a[0] != b[0])
-            return a[0] < b[0];
-        
-        return a[1] < b[1];
-    }
-    
     int maxEvents(vector<vector<int>>& events) {
-        sort(events.begin(), events.end(), comp);
+        int n = events.size();
+        sort(events.begin(), events.end());
         
-        int n = events.size(), ans = 0, i = 0;
-        multiset<int>endDays;
+        priority_queue<int, vector<int>, greater<int> > pq;
         
-        for(int j = 1; j <= 100000; j++)
-        {
-            while(!endDays.empty() && *(endDays.begin()) < j)
-                endDays.erase(endDays.begin());
+        int maxday = 1;
+        
+        for(auto& x : events)
+            maxday = max(maxday, x[1]);
+        
+        int day = 1, ans = 0, eid = 0;
+        
+        while(day <= maxday)
+        {    
+            if(eid < n and pq.empty())
+                day = events[eid][0];
             
-            while(i < n && events[i][0] == j)
+            while(eid < n and events[eid][0] <= day)
             {
-                endDays.insert(events[i][1]);
-                i++;
+                pq.push(events[eid][1]);
+                eid++;
             }
+        
+            while(!pq.empty() and pq.top() < day)
+                pq.pop();
             
-            if(endDays.size() > 0)
+            if(!pq.empty())
             {
+                pq.pop();
                 ans++;
-                endDays.erase(endDays.begin());
             }
+            
+            day++;
         }
         
         return ans;
