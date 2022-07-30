@@ -1,38 +1,45 @@
 class Solution {
 public:
     vector<string> wordSubsets(vector<string>& words1, vector<string>& words2) {
-        int sub[26] = {0}, temp[26] = {0};
-        vector<string> res;
+        int dp1[26];
+        fill(dp1, dp1 + 26, 0);
+        vector<string>ans;
         
-        for (const string & s: words2) 
+        for(int i = 0; i < words2.size(); i++) 
         {
-            for (int i = 0; i < s.size(); i++)
-                temp[s[i] - 'a']++;
+            int dp[26];
+            fill(dp, dp + 26, 0);
             
-            for (int j = 0; j < 26; j++)
-                sub[j] = max(sub[j], temp[j]);
+            for(int j = 0; j < words2[i].length(); j++)
+                dp[words2[i][j] - 'a']++;
             
-            memset(temp, 0, 104);
+            for(int j = 0;j < 26; j++)
+                dp1[j] = max(dp1[j], dp[j]);
         }
         
-        for (const string & s: words1) 
+        for(int i = 0; i < words1.size(); i++) 
         {
-            copy(begin(sub), end(sub), begin(temp));
+            int dp[26];
+            fill(dp, dp + 26,0);
             
-            for (int i = 0; i < s.size(); i++)
-                temp[s[i] - 'a']--;
+            for(int j = 0; j < words1[i].length(); j++)
+                dp[words1[i][j] - 'a']++;
             
-            int k = 0;
-            while (k < 26) 
+            bool found = true;
+            
+            for(int j = 0; j < 26; j++) 
             {
-                if (temp[k++] > 0) 
-                    break; 
+                if(dp1[j] > dp[j]) 
+                {
+                    found = false;
+                    break;
+                }
             }
             
-            if (k == 26) 
-                res.push_back(s);
+            if(found)
+                ans.push_back(words1[i]);
         }
         
-        return res;
+        return ans;
     }
 };
