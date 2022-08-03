@@ -15,9 +15,9 @@ public:
             if(candidates[j] > target)
                 break;
             
-                sum.push_back(candidates[j]);
-                helper(candidates, ans, sum, j + 1, target - candidates[j]);
-                sum.pop_back();
+            sum.push_back(candidates[j]);
+            helper(candidates, ans, sum, j + 1, target - candidates[j]);
+            sum.pop_back();
         }
     }
     
