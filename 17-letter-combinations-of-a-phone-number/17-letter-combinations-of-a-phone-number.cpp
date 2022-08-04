@@ -1,28 +1,28 @@
 class Solution {
 public:
-    const vector<string> pad = {
-        "", "", "abc", "def", "ghi", "jkl",
-        "mno", "pqrs", "tuv", "wxyz"
+    const vector<string>pad = {
+        "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"    
     };
     
     vector<string> letterCombinations(string digits) {
-        if (digits.empty()) 
+        int n = digits.size();
+        if(n == 0)
             return {};
         
-		vector<string> result;
-        result.push_back("");
+        vector<string>ans;
+        ans.push_back("");
         
-        for(auto digit: digits) 
+        for(auto digit: digits)
         {
-            vector<string> tmp;
-            for(auto candidate: pad[digit - '0']) 
+            vector<string>temp;
+            for(auto candidates: pad[digit - '0'])
             {
-                for(auto s: result)
-                    tmp.push_back(s + candidate);
+                for(auto it: ans)
+                    temp.push_back(it + candidates);
             }
-            
-            result.swap(tmp);
+            ans.swap(temp);
         }
-        return result;
+        
+        return ans;
     }
 };
