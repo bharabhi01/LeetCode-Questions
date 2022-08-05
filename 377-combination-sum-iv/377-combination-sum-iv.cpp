@@ -1,16 +1,26 @@
 class Solution {
 public:
-    int combinationSum4(vector<int>& nums, int target) {
-        vector<unsigned int>dp(target + 1, 0);
-        dp[0] = 1;
+    int helper(int ind, vector<int>& nums, int target, int n, vector<int>& dp) {
+        if(target == 0) 
+            return 1;
         
-        for(int i = 1; i <= target; i++)
+        int ans = 0;
+        
+        if(dp[target] != -1) 
+            return dp[target];
+        
+        for(int i = 0; i < n; i++)
         {
-            for(int j : nums)
-                if(i >= j)
-                    dp[i] += dp[i - j];
+            if(nums[i] <= target)
+                ans += helper(i, nums, target - nums[i], n, dp);
         }
         
-        return dp[target];
+        return dp[target] = ans;
+    }
+    int combinationSum4(vector<int>& nums, int target) {
+        int n = nums.size();
+        vector<int>dp(target + 1, -1);
+        
+        return helper(0, nums, target, n, dp);
     }
 };
