@@ -1,6 +1,7 @@
 class MyHashMap {
 public:
     vector<int>arr;
+    
     MyHashMap() {
         arr.resize(1000001, -1);
     }
