@@ -1,24 +1,24 @@
 class MyHashMap {
 public:
-    vector<int>arr;
+    unordered_map<int, int>mp;
     
     MyHashMap() {
-        arr.resize(1000001, -1);
+        
     }
     
     void put(int key, int value) {
-        arr[key] = value;
+        mp[key] = value;
     }
     
     int get(int key) {
-        if(arr[key] != -1)
-            return arr[key];
-        else
+        if(mp.find(key) == mp.end())
             return -1;
+        else
+            return mp[key];
     }
     
     void remove(int key) {
-        arr[key] = -1;
+        mp.erase(key);
     }
 };
 
