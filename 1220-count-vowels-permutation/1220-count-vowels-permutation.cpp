@@ -1,33 +1,23 @@
 class Solution {
-    const int MOD = 1e9 + 7;
-    const unordered_map<char, vector<char>> mappings{ {'s', {'a', 'e', 'i', 'o', 'u'} },
-                                                      {'a', {'e'}                     }, 
-                                                      {'e', {'a', 'i'}                }, 
-                                                      {'i', {'a', 'e', 'o', 'u'}      }, 
-                                                      {'o', {'i', 'u'}                },
-                                                      {'u', {'a'}                     }  
-                                                    };
-    unordered_map<char, vector<int>> dp;
-
 public:
-    int solve(int rem, char prev) {
-        if(rem == 0) 
-            return 1;                        
-        
-        if(dp[prev][rem]) 
-            return dp[prev][rem];       
-        
-        for(auto c : mappings.at(prev))              
-            dp[prev][rem] = (dp[prev][rem] + solve(rem - 1, c)) % MOD;  
-        
-        return dp[prev][rem];
-    }
-
-    
     int countVowelPermutation(int n) {
-        dp['s'] = dp['a'] = dp['e'] = dp['i'] = dp['o'] = dp['u'] = vector<int>(n + 1);
+         long aCount = 1, eCount = 1, iCount = 1, oCount = 1, uCount = 1;
+        int MOD = 1000000007;
+
+        for (int i = 1; i < n; i++) {
+            long aCountNew = (eCount + iCount + uCount) % MOD;
+            long eCountNew = (aCount + iCount) % MOD;
+            long iCountNew = (eCount + oCount) % MOD;
+            long oCountNew = (iCount) % MOD;
+            long uCountNew = (iCount + oCount) % MOD;
+            aCount = aCountNew;
+            eCount = eCountNew;
+            iCount = iCountNew;
+            oCount = oCountNew;
+            uCount = uCountNew;
+        }
+        long result = (aCount + eCount + iCount + oCount + uCount)  % MOD;
         
-        return solve(n, 's');                         
+        return (int)result;
     }
-    
 };
