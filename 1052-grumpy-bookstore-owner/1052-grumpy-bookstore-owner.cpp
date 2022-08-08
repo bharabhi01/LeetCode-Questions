@@ -9,21 +9,30 @@ public:
                 sum += customers[i];
         
         int satisfaction = sum;
+        int tempSum = 0;
+
+        for(int i = start; i <= end; i++)
+            if(grumpy[i] == 1)
+                tempSum += customers[i];
+        
+        int maxWindowSum = tempSum;
+        start++;
+        end++;
         
         while(end < n)
         {
-            int tempSum = 0;
+            if(grumpy[start - 1] == 1)
+                tempSum -= customers[start - 1];
             
-            for(int i = start; i <= end; i++)
-                if(grumpy[i] == 1)
-                    tempSum += customers[i];
+            if(grumpy[end] == 1)
+                tempSum += customers[end];
             
-            satisfaction = max(satisfaction, sum + tempSum);
+            maxWindowSum = max(tempSum, maxWindowSum);
             
             start++;
             end++;
         }
         
-        return satisfaction;
+        return (satisfaction + maxWindowSum);
     }
 };
