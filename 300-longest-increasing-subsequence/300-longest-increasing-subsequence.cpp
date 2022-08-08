@@ -2,7 +2,6 @@ class Solution {
 public:    
     int lengthOfLIS(vector<int>& nums) {
         int n = nums.size();
-        
         vector<int>dp(n, 1);
         int maxi = 1;
         
@@ -16,6 +15,7 @@ public:
             
             maxi = max(maxi, dp[i]);
         }
+        
         return maxi;
     }
 };
