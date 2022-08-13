@@ -25,7 +25,7 @@ public:
             sum += carry;
             carry = sum / 10;
             sum = sum % 10;
-            ans = ans + to_string(sum);
+            ans += (sum + '0');
         }
         
         reverse(ans.begin(), ans.end());
