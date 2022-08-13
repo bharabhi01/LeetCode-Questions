@@ -1,33 +1,48 @@
 class Solution {
 public:
     vector<int> findSubstring(string s, vector<string>& words) {
-        unordered_map<string, int> counts;
-        for (string word : words)
-            counts[word]++;
+        int n = words[0].length();
+        unordered_map<string, int> available;
         
-        int n = s.length(), num = words.size(), len = words[0].length();
-        vector<int>indexes;
+        for(string w : words)
+            available[w]++;
         
-        for(int i = 0; i < n - num * len + 1; i++) 
+        unordered_map<string, int> used;
+        vector<int> matches;
+        
+        for(int offset = 0; offset < n; ++offset)
         {
-            unordered_map<string, int> seen;
-            int j = 0;
-            for (; j < num; j++) 
-            {
-                string word = s.substr(i + j * len, len);
-                if (counts.find(word) != counts.end()) 
-                {
-                    seen[word]++;
-                    if (seen[word] > counts[word])
-                        break;
-                }
-                else break;
-            }
+            used.clear();
+            int start = offset;
+            int end = start + n; 
             
-            if (j == num) 
-                indexes.push_back(i);
+            while(start + n * words.size() <= s.length() && end <= s.length())
+            {
+                string k = s.substr(end - n, n);
+                
+                if(available.find(k) == available.end())
+                {
+                    used.clear();
+                    start = end;
+                    end = start + n;
+                }
+                else
+                {
+                    used[k]++;
+                    while(used[k] > available[k])
+                    {
+                        used[s.substr(start, n)]--;
+                        start += n;
+                    }
+                    
+                    if(end - start == words.size() * n)
+                        matches.push_back(start);
+                    
+                    end += n;
+                } 
+            }
         }
         
-        return indexes;
+        return matches;
     }
 };
