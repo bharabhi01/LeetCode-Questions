@@ -21,7 +21,7 @@ public:
     
     vector<int> movesToStamp(string stamp, string target) {
         stars = 0, n = size(target), m = size(stamp);        
-        vector<bool> vis(n + 1, false);  
+        vector<bool> vis(n, false);  
         
         while(stars < n)
         {           
