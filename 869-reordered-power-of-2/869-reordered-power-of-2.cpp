@@ -1,30 +1,19 @@
 class Solution {
 public:
-    vector<int> countdigit(int n) {
-        vector<int>v(10, 0);
-        while(n != 0)
-        {
-            int ld = n % 10;
-            v[ld]++;
-            n /= 10;
-        }
-        return v;
+    bool reorderedPowerOf2(int N) {
+        long c = counter(N);
+        for (int i = 0; i < 32; i++)
+            if (counter(1 << i) == c) 
+                return true;
+        
+        return false;
     }
 
-    bool reorderedPowerOf2(int n) {
-        vector<int>v;
-        v = countdigit(n);
-
-        for(int i = 0; i <= 30; i++)
-        {
-            int t = pow(2, i);
-            vector<int>m;
-
-            m = countdigit(t);
-            
-            if(m == v) 
-                return true;
-        }
-        return false;
+    long counter(int N) {
+        long res = 0;
+        for (; N; N /= 10) 
+            res += pow(10, N % 10);
+        
+        return res;
     }
 };
