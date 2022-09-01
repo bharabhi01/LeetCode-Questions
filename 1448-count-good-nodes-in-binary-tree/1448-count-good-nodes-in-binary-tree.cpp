@@ -11,21 +11,23 @@
  */
 class Solution {
 public:
-    int solve(TreeNode* root,int maxi) {
-        if(root == NULL)
+    int goodNodes(TreeNode* root) {
+        if(!root)
             return 0;
         
-        maxi = max(root->val, maxi);
-        
-        if(root->val >= maxi)
-            return 1 + solve(root->left, maxi) + solve(root->right, maxi);
-        
-        return solve(root->left, maxi) + solve(root->right, maxi);
+        return goodNodesRec(root, INT_MIN);
     }
     
-    int goodNodes(TreeNode* root) {
-        int maxi = INT_MIN;
+    int goodNodesRec(TreeNode* root, int maxVal) {
+        int res = 0;
+        if(!root)
+            return 0;
         
-        return solve(root, maxi);  
+        if(root->val >= maxVal)
+            res++;
+        
+        maxVal = max(maxVal, root->val);
+        
+        return res + goodNodesRec(root->left, maxVal) + goodNodesRec(root->right, maxVal);
     }
 };
