@@ -11,25 +11,21 @@
  */
 class Solution {
 public:
-    int count = 0;
-    
-    void dfs(TreeNode* node,int curMax) {
-        if (!node) 
-            return;
+    int solve(TreeNode* root,int maxi) {
+        if(root == NULL)
+            return 0;
         
-        if (node->val >= curMax)
-        {
-            count++;
-            curMax = node->val;
-        }
+        maxi = max(root->val, maxi);
         
-        dfs(node->left, curMax);
-        dfs(node->right, curMax);
+        if(root->val >= maxi)
+            return 1 + solve(root->left, maxi) + solve(root->right, maxi);
+        
+        return solve(root->left, maxi) + solve(root->right, maxi);
     }
     
     int goodNodes(TreeNode* root) {
-        dfs(root, root->val);
+        int maxi = INT_MIN;
         
-        return count;
+        return solve(root, maxi);  
     }
 };
