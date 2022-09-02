@@ -10,60 +10,47 @@
  * };
  */
 class Solution {
-public:
-    vector<double> averageOfLevels(TreeNode* root) {    
+public: 
+    int height(TreeNode * root) {
+        if(root == NULL)
+            return 0;
+
+        return 1 + max(height(root->left), height(root->right));
+    }
+    
+    vector<double> printLevelOrder(TreeNode* root) {
+        int h = height(root), i;
         vector<double> res;
         
-        if(root == NULL) 
-            return res;
-        
-        res.push_back(root->val);
-        
-        queue<TreeNode *> q;
-        q.push(root);
-        q.push(NULL);
-        
-        double levelSum = 0;
-        double levelCount = 0;
-        
-        while(!q.empty())
+        for(i = 1; i <= h; i++)
         {
-            TreeNode *currNode = q.front();
-            q.pop();
+            double sum = 0, node = 0;
             
-            if(currNode != NULL)
-            {
-                if(currNode->left != NULL)
-                {
-                    q.push(currNode->left);
-                    levelSum += currNode->left->val;
-                    levelCount++;
-                }
-                
-                if(currNode->right != NULL)
-                {
-                    q.push(currNode->right);
-                    levelSum += currNode->right->val;
-                    levelCount++;
-                }
-            }
+            printCurrentLevel(root, i, sum, node);
             
-            if(q.front() == NULL)
-            {
-                q.pop();
-                if(q.empty()) 
-                    break;
-                
-                double sum = levelSum/levelCount;
-                res.push_back(sum);
-                
-                levelSum = 0;
-                levelCount = 0;
-                
-                q.push(NULL);
-            }
+            res.push_back(sum/node);
         }
         
         return res;
+    }
+
+    void printCurrentLevel(TreeNode* root, int level, double& sum , double& node) {
+        if(root == NULL)
+            return;
+        
+        if(level == 1)
+        {
+            sum += root->val;
+            node += 1;
+        }
+        else if(level > 1) 
+        {
+            printCurrentLevel(root->left, level - 1, sum, node);
+            printCurrentLevel(root->right, level - 1, sum, node);
+        }
+    }
+
+    vector<double> averageOfLevels(TreeNode* root) {
+        return printLevelOrder(root);
     }
 };
