@@ -11,35 +11,59 @@
  */
 class Solution {
 public:
-    vector<double> avg;
-    vector<double>sum;
-    vector<int>n;
-    
-    void rec(TreeNode* root, int level) {
-        if(!root) 
-            return;
+    vector<double> averageOfLevels(TreeNode* root) {    
+        vector<double> res;
         
-        if(sum.size() > level)
+        if(root == NULL) 
+            return res;
+        
+        res.push_back(root->val);
+        
+        queue<TreeNode *> q;
+        q.push(root);
+        q.push(NULL);
+        
+        double levelSum = 0;
+        double levelCount = 0;
+        
+        while(!q.empty())
         {
-            sum[level] += root->val;
-            n[level]++;
-        }
-        else
-        {
-            sum.push_back(root->val);
-            n.push_back(1);
+            TreeNode *currNode = q.front();
+            q.pop();
+            
+            if(currNode != NULL)
+            {
+                if(currNode->left != NULL)
+                {
+                    q.push(currNode->left);
+                    levelSum += currNode->left->val;
+                    levelCount++;
+                }
+                
+                if(currNode->right != NULL)
+                {
+                    q.push(currNode->right);
+                    levelSum += currNode->right->val;
+                    levelCount++;
+                }
+            }
+            
+            if(q.front() == NULL)
+            {
+                q.pop();
+                if(q.empty()) 
+                    break;
+                
+                double sum = levelSum/levelCount;
+                res.push_back(sum);
+                
+                levelSum = 0;
+                levelCount = 0;
+                
+                q.push(NULL);
+            }
         }
         
-        rec(root->left, level + 1);
-        rec(root->right, level + 1);
-    }
-    
-    vector<double> averageOfLevels(TreeNode* root) {
-        rec(root, 0);
-        
-        for(int i = 0; i < sum.size(); i++)
-            avg.push_back(sum[i] / (double)n[i]);
-
-        return avg;
+        return res;
     }
 };
