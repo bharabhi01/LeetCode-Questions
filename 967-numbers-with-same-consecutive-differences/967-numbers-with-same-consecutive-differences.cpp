@@ -1,26 +1,26 @@
 class Solution {
 public:
-    vector<int> ans;
-    
-    void rcheck(int num, int k, int n) {
-        if(n == 1)
+    vector<int> numsSameConsecDiff(int N, int K) {
+        vector<int> cur = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        
+        for (int i = 2; i <= N; ++i)
         {
-            ans.push_back(num);
-            return;
+            vector<int> cur2;
+            
+            for (int x : cur) 
+            {
+                int y = x % 10;
+                
+                if (y + K < 10)
+                    cur2.push_back(x * 10 + y + K);
+                
+                if (K > 0 && y - K >= 0)
+                    cur2.push_back(x * 10 + y - K);
+            }
+            
+            cur = cur2;
         }
         
-        if(num % 10 - k >= 0)
-            rcheck(num * 10 + (num % 10 - k), k, n - 1);
-        
-        if(k)
-            if(num % 10 + k < 10)
-                rcheck(num * 10 + (num % 10 + k), k, n - 1);
-    }
-    
-    vector<int> numsSameConsecDiff(int n, int k) {
-        for(int i = 1; i < 10; i++) 
-            rcheck(i, k, n);
-        
-        return ans;
+        return cur;
     }
 };
