@@ -11,18 +11,45 @@
  */
 class Solution {
 public:
-    int pseudoPalindromicPaths(TreeNode* root, int count = 0) {
-        if (!root) 
-            return 0;
+    void preorder(TreeNode* root,int& count,vector<int> &dig) {
+        if(root == nullptr)
+            return;
         
-        count ^= 1 << (root->val - 1);
+        if(root->left == nullptr && root->right == nullptr)
+        {
+            dig[root->val]++;
+            int oddcount = 0;
+            
+            for(int i = 1; i <= 9; i++)
+            {
+                if(dig[i] % 2)
+                    oddcount++;
+            }
+            
+            if(oddcount < 2) 
+                count++;
+            
+            dig[root->val]--;
+            
+            return;
+        }
         
-        int res = pseudoPalindromicPaths(root->left, count) 
-                + pseudoPalindromicPaths(root->right, count);
+        dig[root->val]++;
         
-        if (root->left == root->right && (count & (count - 1)) == 0) 
-            res++;
+        preorder(root->left, count, dig);
+        preorder(root->right, count, dig);
         
-        return res;
+        dig[root->val]--;
+    }
+    
+    int pseudoPalindromicPaths(TreeNode* root) {
+        vector<int>ans;
+        vector<int>dig(10, 0);
+        
+        int count = 0;
+        
+        preorder(root, count, dig);
+        
+        return count;
     }
 };
