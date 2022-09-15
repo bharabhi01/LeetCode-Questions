@@ -1,29 +1,37 @@
 class Solution {
 public:
-    vector<int> findOriginalArray(vector<int>& A) {
-        if(A.size() % 2) 
+    vector<int> findOriginalArray(vector<int>& changed) {
+        int n = changed.size();
+        
+        if(n % 2 != 0) 
             return {};
         
-        unordered_map<int, int> c;
-        vector<int> keys;
-        vector<int> res;
+        int maxNum = *max_element(changed.begin(), changed.end());
+        vector<int> arr(2 * maxNum + 1);
         
-        for (int a : A) 
-            c[a]++;
+        for(int i = 0; i < n; i++) 
+            arr[changed[i]]++;
+    
+        vector<int> ans;
         
-        for (auto it : c)
-            keys.push_back(it.first);
-        
-        sort(keys.begin(), keys.end(), [](int i, int j) {return abs(i) < abs(j);});
-        
-        for (int x : keys) 
+        for(int i = 0; i <= maxNum; i++) 
         {
-            if (c[x] > c[2 * x]) 
-                return {};
-            for(int i = 0; i < c[x]; ++i, c[2 * x]--)
-                res.push_back(x);
+            if(arr[i]) 
+            {
+                arr[i]--;
+                if(arr[i * 2]) 
+                {
+                    arr[i * 2]--;
+                    ans.push_back(i);
+                    
+                    if(arr[i]) 
+                        i--;
+                }
+                else
+                    return {};
+            }
         }
         
-        return res;
+        return ans;
     }
 };
