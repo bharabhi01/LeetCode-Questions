@@ -1,71 +1,58 @@
-struct TrieNode {
-    TrieNode *next[26] = {};
-    int index = -1;
-    vector<int> palindromeIndexes;
-};
-
 class Solution {
-    TrieNode root; 
-    
-    void add(string &s, int i) {
-        auto node = &root;
-        
-        for (int j = s.size() - 1; j >= 0; --j) 
-        {
-            if (isPalindrome(s, 0, j)) 
-                node->palindromeIndexes.push_back(i); 
-            
-            int c = s[j] - 'a';
-            
-            if (!node->next[c]) 
-                node->next[c] = new TrieNode();
-            
-            node = node->next[c];
-        }
-        
-        node->index = i;
-        node->palindromeIndexes.push_back(i); 
-    }
-    
-    bool isPalindrome(string &s, int i, int j) {
-        while (i < j && s[i] == s[j]) 
-        {
-            ++i;
-            --j;
-        }
-        
-        return i >= j;
-    }
-    
 public:
-    vector<vector<int>> palindromePairs(vector<string>& A) {
-        int N = A.size();
-        
-        for (int i = 0; i < N; ++i) 
-            add(A[i], i);
-        
-        vector<vector<int>> ans;
-        
-        for (int i = 0; i < N; ++i) 
+    bool isPalin(string &s, int i, int j) {
+        while(i < j)
         {
-            auto s = A[i];
-            auto node = &root;
+            if(s[i++] != s[j--]) 
+                return false;
+        }
+        
+        return true;
+    }
+    
+    vector<vector<int>> palindromePairs(vector<string> &words) {
+        vector<vector<int>> ans;
+        unordered_map<string, int> mp;
+        set<int> st;
+        
+        if(words.empty()) 
+            return ans;
+        
+        for(int i = 0; i < words.size(); i++) 
+        {
+            mp[words[i]] = i;
+            st.insert(words[i].size());
+        }
+        
+        for(int i = 0; i < words.size(); ++i) {
+            string cpy(words[i]);
+            reverse(cpy.begin(), cpy.end());
             
-            for (int j = 0; j < s.size() && node; ++j) 
+            int ln = cpy.size();
+            
+            if(mp.find(cpy) != mp.end() && mp[cpy] != i)
+                ans.push_back({i, mp[cpy]});
+            
+            for(auto l : st)
             {
-                if (node->index != -1 && node->index != i && isPalindrome(s, j, s.size() - 1))
-                    ans.push_back({i, node->index}); 
+                if(l >= ln) 
+                    break;
                 
-                node = node->next[s[j] - 'a'];
-            }
-            
-            if (!node) 
-                continue;
-            
-            for (int j : node->palindromeIndexes) 
-            { 
-                if (i != j) 
-                    ans.push_back({i, j});
+                if(isPalin(words[i], 0, ln - l - 1)) 
+                {
+                    string p = cpy.substr(0, l);
+                    
+                    if(mp.find(p) != mp.end())
+                        ans.push_back({mp[p], i});
+                }
+                
+                if(isPalin(words[i], l, ln - 1))
+                {
+                    string  p = cpy.substr(ln - l);
+                    
+                    if(mp.find(p) != mp.end())
+                        ans.push_back({i, mp[p]});
+                }
             }
         }
         
