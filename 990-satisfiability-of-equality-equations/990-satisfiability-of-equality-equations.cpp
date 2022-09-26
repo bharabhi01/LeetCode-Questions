@@ -1,41 +1,34 @@
 class Solution {
-    vector<char>parent;
-
-    char rootfind(char x) {
-        return parent[x] == x ? x : rootfind(parent[x]);
-    }
-
 public:
+    int find(vector<int> &arr, int x) {
+        if(x != arr[x]) 
+            arr[x] = find(arr, arr[x]);
+        
+        return arr[x];
+    }
+    
     bool equationsPossible(vector<string>& equations) {
-        parent.resize(26, 0);
+        vector<int> arr(26,0);
         
-        for (int i = 0; i < 26; i++)
-            parent[i] = i;
+        for(int i = 0; i < 26; i++)
+            arr[i] = i;
         
-        for (auto strng: equations) 
+        for(auto x : equations)
         {
-            if (strng[1] == '=') 
+            if(x[1] == '=')
             {
-                char x = rootfind(strng[0]-'a');
-                char y = rootfind(strng[3]-'a');
-                
-                if (x != y)
-                    parent[y] = x;
+                int ra = find(arr, x[0] - 'a');
+                int rb = find(arr, x[3] - 'a');
+                arr[ra] = rb;
             }
         }
         
-        for (auto strng: equations) 
+        for(auto x : equations)
         {
-            if (strng[1] == '!') 
-            {
-                int x = rootfind(strng[0]-'a');
-                int y = rootfind(strng[3]-'a');
-                
-                if (x == y)
-                    return false;
-            }
+            if(x[1] == '!' && find(arr, x[0] - 'a') == find(arr, x[3] - 'a'))
+                return false;
         }
         
-        return true;
+        return true;  
     }
 };
