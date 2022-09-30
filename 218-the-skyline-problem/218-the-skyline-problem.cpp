@@ -1,38 +1,35 @@
 class Solution {
 public:
     vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
-        vector<pair<int,int>> heights;
+        priority_queue<pair<int, int>> pq;
+        vector<int> boundaries; 
         
-        for(auto it : buildings)
+        for (auto& building : buildings) 
         {
-            heights.push_back({it[0],-it[2]});
-            heights.push_back({it[1], it[2]});
+            boundaries.emplace_back(building[0]);
+            boundaries.emplace_back(building[1]);
         }
         
-        sort(heights.begin(), heights.end());
-        
+        sort(boundaries.begin(), boundaries.end());
+
         vector<vector<int>> ans;
+        int n = buildings.size(), idx = 0;
         
-        multiset<int, greater<int>> ms;
-        ms.insert(0);
-		
-        int preMax = 0;
-        
-        for(auto it : heights)
+        for (auto& boundary : boundaries) 
         {
-            if(it.second < 0)
-                ms.insert(-it.second);
-			
-            else
-                ms.erase(ms.find(it.second));
-            
-            int curMax = *(ms.begin());
-            
-            if(curMax != preMax)
+            while (idx < n && buildings[idx][0] <= boundary) 
             {
-                ans.push_back({it.first, curMax});
-                preMax = curMax;
+                pq.emplace(buildings[idx][2], buildings[idx][1]);
+                idx++;
             }
+        
+            while (!pq.empty() && pq.top().second <= boundary) 
+                pq.pop();
+
+            int maxn = pq.empty() ? 0 : pq.top().first;
+            
+            if (ans.size() == 0 || maxn != ans.back()[1]) 
+                ans.push_back({boundary, maxn});
         }
         
         return ans;
