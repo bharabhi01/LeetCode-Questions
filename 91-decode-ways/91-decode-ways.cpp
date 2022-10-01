@@ -1,27 +1,33 @@
 class Solution {
 public:
+    int dp[102];
+    
+    int decode(string& s, int idx, int n)
+    {
+        if(idx < n && s[idx] == '0') 
+            return 0;
+        
+        if(idx >= n)
+            return 1;
+        
+        if(dp[idx] != -1) 
+            return dp[idx];
+        
+        int ways = 0;
+        
+        if(s[idx] != '0') 
+            ways = decode(s, idx + 1, n);
+           
+        if(idx + 1 < n && ((s[idx] == '1' && s[idx + 1] <= '9') || (s[idx] == '2' && s[idx + 1] < '7')))
+           ways += decode(s, idx + 2, n);
+           
+        return dp[idx] = ways;
+    }
+    
     int numDecodings(string s) {
+        memset(dp, -1, sizeof(dp));
         int n = s.size();
-        int curr = 0, nx1 = 1, nx2 = 0;
         
-        for(int i = n - 1; i >= 0; i--)
-        {
-            if(s[i] == '0') 
-                curr = 0; 
-            else
-            {
-                int res = nx1;
-                
-                if(i < n - 1 && (s[i] == '1' || (s[i] == '2' && s[i + 1] < '7'))) 
-                    res += nx2;
-                
-                curr = res;
-            }
-            
-            nx2 = nx1;
-            nx1 = curr;
-        }
-        
-        return curr;
+        return decode(s, 0, n);
     }
 };
