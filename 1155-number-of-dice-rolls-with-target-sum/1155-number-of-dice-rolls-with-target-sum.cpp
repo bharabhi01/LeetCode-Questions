@@ -1,35 +1,31 @@
 class Solution {
 public:
-    long long dp[1001][1001];
     int MOD = 1e9 + 7;
     
-    long long call(int idx, int k, int target, int& ans, int n, int val) {
-        if(idx == n)
+    int numRollsToTarget(int n, int l, int target) {
+        if(target < n || target > n * l) 
+            return 0;
+        
+        vector<int>dp(target + 1, 0);
+        dp[0] = 1;
+        
+        for(int i = 1; i <= n; i++)
         {
-            if(val == target)
-                return 1;
+            int total = 0;
+            
+            for(int j = max(0, target - l); j <= target; j++) 
+                total = (total + dp[j]) % MOD;
+            
+            for(int j = target; j >= 0; j--)
+            {
+                total = (total - dp[j] + MOD) % MOD;
+                dp[j] = total;
+                
+                if(j - l - 1 >= 0) 
+                    total = (total + dp[j - l - 1]) % MOD;
+            }
         }
         
-        if(dp[idx][val] != -1)
-            return dp[idx][val];
-    
-        int sum = 0;
-        
-        for(int i = 1; i <= k; i++)
-        {
-            if(val + i <= target)
-                sum = (sum + call(idx + 1, k, target, ans, n, val + i)) % MOD;
-        }
-        
-        return dp[idx][val] = sum;
-    }
-        
-    int numRollsToTarget(int n, int k, int target) {
-        int ans = 0, idx = 0, val = 0;
-        memset(dp, -1, sizeof(dp));
-        
-        int res = call(idx, k, target, ans, n, val);
-        
-        return res;
+        return dp[target];
     }
 };
