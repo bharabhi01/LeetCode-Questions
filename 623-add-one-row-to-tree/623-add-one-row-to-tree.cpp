@@ -10,53 +10,24 @@
  * };
  */
 class Solution {
-public:
-    TreeNode* addOneRow(TreeNode* root, int val, int depth) {
-        if(depth == 1)
-        {
-            TreeNode* newNode = new TreeNode(val);
-            newNode -> left = root;
-            return newNode; 
-        }
-        
-        queue<TreeNode*> q; 
-        q.push(root); 
-        int count = 0;         
-        
-        while(!q.empty()) 
-        {
-            int n = q.size(); 
-            
-            count++; 
-            
-            while(n--)
+    public:
+        TreeNode* addOneRow(TreeNode* root, int v, int d) {
+            if(!root) 
+                return root;
+
+            if(d == 1) 
+                return new TreeNode(v, root, NULL);
+
+            if(d == 2) 
             {
-                TreeNode* curr = q.front(); 
-                q.pop(); 
-                
-                if(count != depth - 1) 
-                {
-                    if(curr -> left) 
-                        q.push(curr -> left);
-                    
-                    if(curr -> right) 
-                        q.push(curr -> right);
-                }
-                else 
-                {
-                    TreeNode* newNode = new TreeNode(val);
-            
-                    newNode -> left = curr -> left;
-                    curr -> left = newNode;
-                    
-                    TreeNode* newNode2 = new TreeNode(val);
-
-                    newNode2 -> right = curr -> right;
-                    curr -> right = newNode2;
-                }
+                root->left = new TreeNode(v, root->left, NULL);
+                root->right = new TreeNode(v, NULL, root->right);    
+                return root;
             }
-        }
 
-        return root;
-    }
+            addOneRow(root->left, v, d - 1);
+            addOneRow(root->right, v, d - 1);
+
+            return root;
+        }
 };
