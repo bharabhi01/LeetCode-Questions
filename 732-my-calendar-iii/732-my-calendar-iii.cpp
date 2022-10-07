@@ -1,24 +1,28 @@
 class MyCalendarThree {
-public:
-    map<int, int>timeSum;
+private:
+    int maxi;
+    map<int, int> m;
     
+public:
     MyCalendarThree() {
-        
+        m.emplace(-1, 0);
+        maxi = 0;
     }
     
     int book(int start, int end) {
-        timeSum[start]++;
-        timeSum[end]--;
+        auto startIt = --m.upper_bound(start);
+        startIt = m.emplace(start, startIt->second).first;
         
-        int result = 0, sum = 0;
+        auto endIt = --m.upper_bound(end);
+        endIt = m.emplace(end, endIt->second).first;
         
-        for(auto &[time, diff] : timeSum)
+        for (auto it = startIt; it != endIt; ++it) 
         {
-            sum += diff;
-            result = max(result, sum);
+            ++it->second;
+            maxi = max(maxi, it->second);
         }
         
-        return result;
+        return maxi;
     }
 };
 
