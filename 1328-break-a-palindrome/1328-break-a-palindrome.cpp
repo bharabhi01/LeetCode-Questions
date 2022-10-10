@@ -1,19 +1,25 @@
 class Solution {
 public:
     string breakPalindrome(string palindrome) {
-        int n = palindrome.size();
+        int n = palindrome.size(), count = 1;
+        int m = palindrome.length() / 2 - 1;
         
-        for(int i = 0; i < n/2; i++)
+        if(n == 1 || palindrome == "")
+            return "";
+        
+        for(int i = 0; i <= m; i++)
         {
             if(palindrome[i] != 'a')
             {
                 palindrome[i] = 'a';
-                return palindrome;
+                count = 0;
+                break;
             }
         }
         
-        palindrome[n - 1] = 'b';
+        if(count == 1)
+            palindrome[n - 1] = 'b';
         
-        return n < 2 ? "" : palindrome;
+        return palindrome;
     }
 };
