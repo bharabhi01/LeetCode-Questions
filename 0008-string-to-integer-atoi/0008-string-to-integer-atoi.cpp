@@ -1,32 +1,44 @@
 class Solution {
 public:
-    int myAtoi(string str) {
-        int ans = 0, i = 0, sign = 1;
-        int n = str.size();
+    int myAtoi(string s) {
+        bool isNegative = false, flag = false;
+		long result = 0;
         
-        while(i < n && str[i] == ' ')
-            i++;
-        
-        if(str[i] == '-' || str[i] == '+')
+		for(char c: s) 
         {
-            sign = str[i] == '-' ? -1 : 1;
-            i++;
-        }
+			if(c == ' ' and !flag) 
+				continue;
+		
+			if(c == '-' and !flag) 
+            {
+				isNegative = true;
+				flag = true;
+				continue;
+			}
+            
+			if((c == '+') and !flag) 
+            {
+				flag = true;
+				continue;
+			}
+            
+			if(c < '0' or c > '9') 
+				break;
+			
+			result = (result ? result * 10 : result) + (c - '0');
+			
+            if(isNegative and result > pow(2, 31)) 
+				result = pow(2, 31);
+			
+			if(!isNegative and result > pow(2, 31) - 1) 
+				result = pow(2, 31) - 1;
+			
+			flag = true;
+		}
         
-        while(i < n && (str[i]  >= '0' && str[i] <= '9'))
-        {
-            int digit = (str[i] - '0') * sign;
-            
-            if(sign == 1 && (ans > INT_MAX / 10 || (ans == INT_MAX / 10 && digit > INT_MAX % 10)))
-                return INT_MAX;
-            
-            if(sign == -1 && (ans < INT_MIN / 10 || (ans == INT_MIN / 10 && digit < INT_MIN % 10)))
-                return INT_MIN;
-            
-            ans = ans * 10 + digit;
-            i++;
-        }
-        
-        return ans;
+		if(isNegative) 
+			result *= -1;
+		
+		return result;
     }
 };
