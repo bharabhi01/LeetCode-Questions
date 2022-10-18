@@ -1,29 +1,28 @@
 class Solution {
 public:
     string countAndSay(int n) {
-        if(n == 0) 
-            return "";
+        if(n == 1) 
+            return "1";
         
-        string res = "1";
+        string str = countAndSay(n - 1);
+        string res = "";
         
-        while(--n) 
+        int s = str.size();
+        int i = 0;
+        
+        while(i < s)
         {
-            string cur = "";
+            char c = str[i];
+            int count = 0;
             
-            for(int i = 0; i < res.size(); i++) 
+            while(i < s and str[i] == c)
             {
-                int count = 1;
-                
-                while((i + 1 < res.size()) && (res[i] == res[i + 1]))
-                {
-                    count++;    
-                    i++;
-                }
-                
-                cur += to_string(count) + res[i];
+                count++;
+                i++;
             }
             
-            res = cur;
+            res += '0' + count;
+            res += c;
         }
         
         return res;
