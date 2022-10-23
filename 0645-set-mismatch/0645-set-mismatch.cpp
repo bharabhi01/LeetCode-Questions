@@ -1,20 +1,26 @@
 class Solution {
 public:
     vector<int> findErrorNums(vector<int>& nums) {
-        int n = nums.size();
-        bool seen[n + 1];
-        vector<int> ans(2);
+        vector<int> ans;
+        int n = nums.size(), i = 0;
         
-        for(int i = 1; i <= n; i++) 
-            seen[i] = false;
-        
-        for(int i : nums) 
-            seen[i] = (!seen[i] || bool(1 + (ans[0] = i)));
-        
-        for(int i = 1; i <= n; i++) 
+        while(i < n)
         {
-            if(!seen[i]) 
-                return ans[1] = i, ans;
+            int correct = nums[i] - 1;
+            
+            if( nums[i] != nums[correct])
+                swap(nums[i], nums[correct]);
+            else
+                i++;
+        }
+        
+        for(int i = 0; i < n; i++)
+        {
+            if(nums[i] != i + 1 )
+            {
+                ans.push_back(nums[i]);
+                ans.push_back(i + 1);
+            }
         }
         
         return ans;
