@@ -1,33 +1,33 @@
 class Solution {
 public:
     bool checkSubarraySum(vector<int>& nums, int k) {
+        long long sum = nums[0];
         int n = nums.size();
         
-        if(n < 2)
-            return false;
-
-        unordered_map<int, int> mp;
- 
-        mp[0] = -1;
-        
-        int runningSum = 0;
-        
-        for(int i = 0; i < n; i++)
+        for(int i = 1; i < n; i++) 
         {
-            runningSum += nums[i];
-            
-            if(k != 0) 
-                runningSum = runningSum % k;
-            
-            if(mp.find(runningSum) != mp.end())
-            {
-                if(i - mp[runningSum] > 1)
+            if(nums[i] == nums[i-1])
+            {    
+                if(nums[i]==0)
                     return true;
             }
-            else
-                mp[runningSum] = i;
+            
+            sum += nums[i];
+            
+            if(sum % k == 0)
+                return true;
+
+            int j = 0, temp = sum;
+            
+            while((i - j) > 1 && temp >= k)
+            {
+                temp -= nums[j++];
+
+                if(temp % k == 0)
+                    return true;
+            }
         }
-        
+
         return false;
     }
 };
